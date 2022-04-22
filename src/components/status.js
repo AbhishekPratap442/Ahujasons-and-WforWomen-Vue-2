@@ -1,0 +1,1 @@
+export const toggleSide = () => (collapsed.value =!collapsed.value)
