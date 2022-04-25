@@ -56,12 +56,12 @@ export default {
       this.loading = false;
       console.log("Api1", data.data);
       // this.productFilter = data.data.result.filters;
-       for( let m of data.data.result.filters)
+       for( let productFilterInfo of data.data.result.filters)
       {
-        console.log('m' , m);
-        this.productFilter.push({...m, isAcitvve:false});
+        // console.log('productFilterInfo' , productFilterInfo);
+        this.productFilter.push({...productFilterInfo, isVisible:false});
       }
-      console.log("productFilter",this.productFilter);
+      // console.log("productFilter",this.productFilter);
       
     },
   },

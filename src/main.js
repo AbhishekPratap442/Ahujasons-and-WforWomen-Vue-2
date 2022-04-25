@@ -1,29 +1,30 @@
-import Vue from 'vue'
-import App from './App.vue'
-import VueRouter from 'vue-router'
-import SingleProductPage from './components/SingleProductPage.vue'
-import ProductPage from './components/ProductPage.vue'
+import Vue from "vue";
+import App from "./App.vue";
+import VueRouter from "vue-router";
+import SingleProductPage from "./components/SingleProductPage.vue";
+import ProductPage from "./components/ProductPage.vue";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 const routes = [
   {
-     path: '/', component: ProductPage, props:true
-     },   
+    path: "/",
+    component: ProductPage,
+    props: true,
+  },
   {
-     path: '/product/:id_product', component: SingleProductPage ,
-     },   
-]
+    path: "/product/:id_product",
+    component: SingleProductPage,
+  },
+];
 
-const router = new VueRouter ({
-  routes
-})
+const router = new VueRouter({
+  mode: 'history',
+  routes,
+});
 
-
-
-
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 new Vue({
   router: router,
-  render: h => h(App),
-}).$mount('#app')
+  render: (h) => h(App),
+}).$mount("#app");

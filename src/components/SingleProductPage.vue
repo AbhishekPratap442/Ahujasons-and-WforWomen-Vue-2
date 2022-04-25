@@ -413,7 +413,6 @@ export default {
   data() {
     return {
       selectedColor: "",
-
       selectedSize: 0,
       colorVarient: [
         {
