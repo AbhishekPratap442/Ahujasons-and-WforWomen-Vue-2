@@ -370,10 +370,11 @@
                           sortingdatabyfilter($event, option.value, option.code)
                         "
                       />
-                      <span class="checkmark" :class="getFilterStatus(option) ? 'checkmarkbg' : ''"
+                      <span
+                        class="checkmark"
+                        :class="getFilterStatus(option) ? 'checkmarkbg' : ''"
                       ></span>
                       <span class="labels">
-                        
                         {{ option.value }} ({{ option.total }})</span
                       >
                     </label>
@@ -392,7 +393,7 @@
           >
             <div class="productImg">
               <img :src="item.image" />
-              <div class="view-product" @click="viewproduct(item.id_product)">
+              <div class="view-product">
                 <router-link :to="`/product/${item.url_key}`"
                   >VIEW PRODUCT</router-link
                 >
@@ -400,7 +401,12 @@
               <div class="productsSpecs">
                 <h4>{{ item.name }}</h4>
                 <span>Rs{{ item.selling_price }}</span>
-                <span id="discount">-{{ item.discount }}%</span>
+                <span class="price" :class="item.discount == 0 ? 'discount' : ''"><s>Rs{{ item.price }}</s></span>
+                <span
+                  id="discount"
+                  :class="item.discount == 0 ? 'discount' : ''"
+                  >-{{ item.discount }}%</span
+                >
                 <span id="stock">{{ item.stock_status }}</span>
               </div>
             </div>
@@ -421,7 +427,6 @@
         <div class="Pagenation_count">
           <ul class="no_pages" v-if="this.productCount / 20 > 1">
             <li
-              
               v-for="page in paginationLoopMethod()"
               :key="page"
               @click="pagination(page)"
@@ -484,13 +489,13 @@ export default {
   methods: {
     paginationLoopMethod() {
       if (this.pageofpagination < Math.ceil(this.productCount / 20)) {
-        console.log('this. pages 1' ,  this.pageofpagination)
+        // console.log('this. pages 1' ,  this.pageofpagination)
         return this.getNumbers(
           this.pageofpagination,
           this.pageofpagination + 5
         );
       } else if (this.pageofpagination >= Math.ceil(this.productCount / 20)) {
-        console.log('this. pages else if' ,  this.pageofpagination)
+        // console.log('this. pages else if' ,  this.pageofpagination)
         return this.getNumbers(
           this.pageofpagination - 6,
           this.pageofpagination
@@ -499,33 +504,47 @@ export default {
     },
 
     getNumbers(start, stop) {
-      const newArrayObtaine = new Array(stop - start).fill(start).map((n, i) => n + i);
-      console.log(" newArrayObtaine",  newArrayObtaine)
-      return  newArrayObtaine
+      const newArrayObtaine = new Array(stop - start)
+        .fill(start)
+        .map((n, i) => n + i);
+      // console.log(" newArrayObtaine",  newArrayObtaine)
+      return newArrayObtaine;
     },
 
     getFilterStatus(option) {
-      console.log("Hi", option, option.code + '-' + option.value,)
-      console.log('this is gerFilterStatus' ,  this.productFilterCetegory.includes(
-        option.code + '-' + option.value,
-      ))
+      // console.log("Hi", option, option.code + '-' + option.value,)
+      // console.log('this is gerFilterStatus' ,  this.productFilterCetegory.includes(
+      //   option.code + '-' + option.value,
+      // ))
       return this.productFilterCetegory.includes(
-        option.code + '-' + option.value,
+        option.code + "-" + option.value
       );
     },
     async productInfoData() {
-      this.$router.push({
-        query: {
-          service: "category",
-          store: 1,
-          url_key: "top-wear-kurtas",
-          page: this.pageofpagination,
-          count: 20,
-          sort_by: this.shrot_by,
-          sort_dir: "desc",
-          filter: this.filtersoptions,
-        },
-      });
+      this.$router
+        .push({
+          query: {
+            // service: "category",
+            // store: 1,
+            // url_key: "top-wear-kurtas",
+            page: this.pageofpagination,
+            count: 20,
+            sort_by: this.shrot_by,
+            // sort_dir: "desc",
+            filter: this.filtersoptions,
+          },
+        })
+        // .catch((error) => {
+        //   if (
+        //     error.name !== "NavigationDuplicated" &&
+        //     !error.message.includes(
+        //       "Avoided redundant navigation to current location"
+        //     )
+        //   ) {
+        //     console.log(error);
+        //   }
+        // })
+        ;
 
       console.log("before");
       this.loading = true;
@@ -579,8 +598,8 @@ export default {
     },
 
     closedFilter(index) {
-      console.log("this function is called", this.value);
-      console.log("AAA", this.checkedValues);
+      // console.log("this function is called", this.value);
+      // console.log("AAA", this.checkedValues);
       if (
         this.checkedValues.includes(index) ==
         this.productFilterCetegory.includes(index)
@@ -616,10 +635,10 @@ export default {
 
       this.productInfoData();
     },
-    viewproduct(id_product) {
-      console.log("thisn is a product id", id_product);
-      // this.$router.push("/product/:item.id_product" ,id_product);
-    },
+    // viewproduct(id_product) {
+    //   // console.log("thisn is a product id", id_product);
+    //   // this.$router.push("/product/:item.id_product" ,id_product);
+    // },
   },
 
   mounted() {
@@ -751,6 +770,11 @@ svg {
 }
 .view-product:hover {
   transform: translateY(0vh);
+}
+.price{
+  font-size: 12px;
+  color: #e4e4e4;
+  margin-left: 12px ;
 }
 @media only screen and (max-width: 1024px) and (min-width: 768px) {
   .left1 ul li {
@@ -992,11 +1016,13 @@ body {
   display: inline-block;
   border-radius: 0px;
   margin-right: 12px;
-  
 }
-.checkmark.checkmarkbg{background: #4c0b36
+.checkmark.checkmarkbg {
+  background: #4c0b36
     url(https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/White_check.svg/1200px-White_check.svg.png)
-    center/1250% no-repeat; background-size:contain;}
+    center/1250% no-repeat;
+  background-size: contain;
+}
 .checkbox input:checked + .checkmark {
   background-size: 60%;
 }
@@ -1039,7 +1065,9 @@ body {
   padding: 1px 12px;
   align-items: center;
 }
-
+.applied_filter ul li svg {
+  margin: 0px 7px;
+}
 /* -------------------------------------Products -------------------- */
 .products_img {
   display: flex;
@@ -1108,6 +1136,7 @@ svg {
 
 .productsSpecs {
   margin-bottom: 29px;
+  margin-top: -25px;
 }
 
 .productImg h4 {
@@ -1121,13 +1150,17 @@ svg {
 }
 
 #discount {
-  padding: 0px 22px;
+  padding: 0px 12px;
   color: red;
+}
+.discount {
+  display: none;
 }
 
 #stock {
   font-size: 14px;
   color: green;
+  margin-left: 6px;
 }
 
 /* .btn{
@@ -1237,6 +1270,10 @@ svg {
   }
   .applied_filter {
     display: none;
+  }
+  .productsSpecs {
+    margin-bottom: 29px;
+    margin-top: -8px;
   }
 
   .filters {
@@ -1361,6 +1398,20 @@ svg {
     padding: 26px;
     height: 98%;
     overflow: auto;
+  }
+  .view-product {
+    position: relative;
+    left: 2px;
+    bottom: 45px;
+    background-color: #631818;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    color: #ffffff;
+    padding: 7px 0px;
+    /* transform: translateY(3vh); */
+    cursor: pointer;
+    /* transition: all 0.3s ease-in; */
   }
 }
 </style>

@@ -6,7 +6,7 @@
       <span class="home-page-link">
         <router-link to="/">Home</router-link>
       </span>
-      <span class="navigation-arrow">></span>
+      <span class="navigation-arrow">/</span>
       <span class="current-product-name"> {{ this.ProductName }}</span>
       <!-- <span>/</span> -->
     </div>
@@ -15,14 +15,15 @@
       <div class="single-product-img" v-if="singleProducts.length">
         <div class="first-slider">
           <VueSlickCarousel
-          v-bind="settingMainImg"
+            v-bind="settingMainImg"
             class="first-img"
             ref="c1"
             :asNavFor="$refs.c2"
             :focusOnSelect="true"
           >
             <div v-for="item in singleProducts" :key="item.id_product">
-              <img :src="item.image" alt="" />
+                <img :src="item.image" alt="" />
+               
             </div>
           </VueSlickCarousel>
         </div>
@@ -41,33 +42,6 @@
             </div>
           </VueSlickCarousel>
         </div>
-        <!-- <div class="share-svg">
-          <svg
-            id="Share"
-            xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
-            viewBox="0 0 32 32"
-          >
-            <g
-              id="Ellipse_89"
-              data-name="Ellipse 89"
-              fill="#fff"
-              stroke="#fff"
-              stroke-width="1"
-            >
-              <circle cx="16" cy="16" r="16" stroke="none" />
-              <circle cx="16" cy="16" r="15.5" fill="none" />
-            </g>
-            <path
-              id="Path_4947"
-              data-name="Path 4947"
-              d="M97.825,215.9l-2.838,1.747c-.462.284-.918.578-1.386.85-.183.106-.2.214-.186.422.039.479.006.963.018,1.444,0,.126.022.317.1.368,1.421.894,2.852,1.771,4.192,2.6a9.063,9.063,0,0,1,1.437-.707,2.707,2.707,0,1,1-1.934,3.253,7.065,7.065,0,0,1-.011-1.324c0-.149-.034-.37-.132-.432-1.386-.875-2.786-1.729-4.183-2.586a.235.235,0,0,0-.078-.016c-1.506,1.136-3.01,1.111-4.065-.068a2.7,2.7,0,0,1,.025-3.632c1.062-1.154,2.559-1.17,4.065-.021l2.545-1.562c.531-.326,1.055-.664,1.594-.978a.417.417,0,0,0,.233-.551,2.691,2.691,0,0,1,1.755-3.21,2.725,2.725,0,0,1,3.433,1.6,2.691,2.691,0,0,1-1.349,3.406,2.655,2.655,0,0,1-2.939-.342C98.028,216.082,97.939,216,97.825,215.9Zm3.758-1.845a1.722,1.722,0,1,0-1.728,1.724A1.716,1.716,0,0,0,101.583,214.058Zm0,11.165a1.722,1.722,0,1,0-1.724,1.733A1.7,1.7,0,0,0,101.584,225.223Zm-10.79-7.294a1.717,1.717,0,1,0,1.735,1.719A1.7,1.7,0,0,0,90.794,217.929Z"
-              transform="translate(-80.071 -203.349)"
-              fill="#262626"
-            />
-          </svg>
-        </div> -->
       </div>
 
       <div class="product-info-box">
@@ -212,7 +186,7 @@
             <div
               class="product-info-color-img"
               @click="changeColor(color.color_name)"
-              
+              v-bind:class="selectedColor == color.color_name ? 'active2' : ''"
             >
               <img :src="color.image_url" alt="" />
             </div>
@@ -264,11 +238,8 @@
                     <span class="lable"> {{ Attribute.label }}</span>
                     <span class="value">{{ Attribute.value }}</span>
                   </li>
-                  <!-- <span class="value">{{Attribute.value}}</span> -->
                 </ul>
               </div>
-
-              <!-- <span>{{Attribute.value}}</span> -->
             </div>
           </div>
         </div>
@@ -402,18 +373,21 @@ import VueSlickCarousel from "vue-slick-carousel";
 import "vue-slick-carousel/dist/vue-slick-carousel.css";
 // optional style for arrows & dots
 import "vue-slick-carousel/dist/vue-slick-carousel-theme.css";
+// import imageZoom from 'vue-image-zoomer';
+// import 'lazysizes'
 import axios from "axios";
 export default {
   name: "SingleProductPage",
   components: {
     Main_header,
     VueSlickCarousel,
+    // imageZoom
   },
 
   data() {
     return {
-      selectedColor: "",
-      selectedSize: 0,
+      selectedColor: "YELLOW",
+      selectedSize: 6,
       colorVarient: [
         {
           image_url:
@@ -444,13 +418,12 @@ export default {
       show: false,
 
       settingMainImg: {
-        autoplay:true,
-        autoplaySpeed:2500,
-      
+        // autoplay: true,
+        // autoplaySpeed: 3500,
       },
       settings: {
-        autoplay:true,
-        autoplaySpeed:2500,
+        // autoplay: true,
+        // autoplaySpeed: 3500,
         dots: true,
         infinite: true,
         slidesToShow: 3,
@@ -459,13 +432,13 @@ export default {
         verticalSwiping: true,
       },
       settingsslides: {
-         autoplay:true,
-        autoplaySpeed:2500,
+        // autoplay: true,
+        // autoplaySpeed: 2500,
         // arrows: true,
         dots: true,
         focusOnSelect: true,
         infinite: true,
-        speed: 500,
+        speed: 2500,
         slidesToShow: 3,
         slidesToScroll: 3,
         touchThreshold: 5,
@@ -485,6 +458,7 @@ export default {
               slidesToShow: 2,
               slidesToScroll: 2,
               initialSlide: 2,
+              infinite: true
             },
           },
           {
@@ -492,6 +466,7 @@ export default {
             settings: {
               slidesToShow: 1,
               slidesToScroll: 1,
+              infinite: true
             },
           },
         ],
@@ -500,8 +475,8 @@ export default {
   },
 
   methods: {
-    changeSize(index) {
-      this.selectedSize = index;
+    changeSize(size) {
+      this.selectedSize = size;
     },
     singleProductInfo() {
       axios
@@ -513,24 +488,24 @@ export default {
           },
         })
         .then((data) => {
-          console.log(data);
-          console.log("this is a single product data", data.data);
+          // console.log(data);
+          // console.log("this is a single product data", data.data);
 
-          console.log("this is product", this.imageURl);
+          // console.log("this is product", this.imageURl);
 
           this.ProductName = data.data.result.name;
-          console.log("this is a product name", this.ProductName);
+          // console.log("this is a product name", this.ProductName);
           this.singleProducts = data.data.result.gallery;
           this.ProductsInfo = data.data.result;
           this.NewSizeInfo = data.data.result.new_size_chart.result;
           this.Attributes = data.data.result.visible_attributes;
           this.BestProducts = data.data.result.bestseller_products;
           this.SellingPrice = data.data.result.selling_price;
-          console.log("this is bestseller product", this.BestProducts);
+          // console.log("this is bestseller product", this.BestProducts);
 
-          console.log("this is a single size data", this.NewSizeInfo);
-          console.log("this is a single product data", this.singleProducts);
-          console.log("this is a single product info", this.ProductsInfo);
+          // console.log("this is a single size data", this.NewSizeInfo);
+          // console.log("this is a single product data", this.singleProducts);
+          // console.log("this is a single product info", this.ProductsInfo);
         });
     },
     changeColor(color) {
@@ -541,11 +516,21 @@ export default {
   mounted() {
     this.id_product = this.$route.params.id_product;
     this.singleProductInfo();
-    console.log("router", this.$router);
+    // console.log("router", this.$router);
   },
 };
 </script>
-<style>
+<style >
+.slick-slide.slick-active.slick-current {
+    border: 1px solid #c11d14;
+}
+
+.slick-dots{
+ display: none  !important;
+} 
+.slick-dots li button {
+  display: none  !important;
+}
 .upper-product-nav {
   padding: 14px 51px;
   padding-top: 20px;
@@ -573,27 +558,12 @@ export default {
   display: none;
 }
 .first-slider {
-  width: 86%;
+  width: 81%;
 }
 .second-slider {
-  width: 12%;
-}
-/* .  {
-  min-height: 200px;
-  width: 100%;
-  color: var(--vc-clr-white);
-  font-size: 20px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 10%;
 }
 
-.carousel__prev,
-.carousel__next {
-  box-sizing: content-box;
-  border: 5px solid white;
-} */
 .share-svg {
   display: inline-block;
   position: absolute;
@@ -612,14 +582,19 @@ export default {
 
 .first-img img {
   width: 100%;
+      /* margin-top: 4px !important; */
 }
+.slick-vertical .slick-slide{
+  width: 61px;
+}
+
 .single-product-img {
   display: flex;
   position: relative;
-  width: 53%;
+  width: 60%;
 }
 .product-info-box {
-  width: 43%;
+  width: 42%;
 }
 .product-info-name {
   margin-bottom: 10px;
@@ -760,6 +735,12 @@ export default {
 .product-info-color-img img {
   cursor: pointer;
   width: 100%;
+  /* padding: 5px; */
+}
+.active2{
+  border: 1px solid black;
+  border-radius: 50%;
+  padding: 2px;
 }
 .sellingPrice {
   display: none;
@@ -784,11 +765,11 @@ export default {
 .wish-list {
   margin: auto;
 }
-.wish-list a{
+.wish-list a {
   color: #686868;
 }
-.wish-list a:hover{
-  color:#000000;
+.wish-list a:hover {
+  color: #000000;
 }
 /* .add-to-cart svg {
   width: 47px;
@@ -868,7 +849,7 @@ export default {
   padding: 0px 50px;
 }
 .best-product-img {
-  width: 95% !important;
+  width: 100% !important;
   display: inline-block;
 }
 .similarProduct {
@@ -918,7 +899,7 @@ export default {
 }
 .best-product-box {
   cursor: pointer;
-  width: 100%;
+  width: 97%;
 }
 .best-product-box img {
   width: 100%;
@@ -949,7 +930,6 @@ export default {
 }
 .shipping svg:hover {
   fill: #686868;
-
 }
 .shipping-box,
 .quality,

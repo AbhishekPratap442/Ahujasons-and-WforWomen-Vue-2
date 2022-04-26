@@ -19,7 +19,7 @@
 
       </h3>
 <!-- v-if="shop" -->
-      <div class="para"   :class="{active : shop}" >
+      <div class="para"   :class="{ activeFooter : shop}" >
         <p> <a href="#"> Men</a></p>
         <p> <a href="#"> Women</a></p>
         <p> <a href="#"> Home</a></p>
@@ -38,7 +38,7 @@
           <svg  v-show="quick_links" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13H5v-2h14v2z"/></svg></span>
       </h3>
       <div class="footer_links">
-        <div class="quick_links_para"  :class="{active : quick_links}">
+        <div class="quick_links_para"  :class="{ activeFooter : quick_links}">
           <p> <a href="#">Ahujasons Expore</a> </p>
           <p> <a href="#">Ahujasons Wholesale</a> </p>
           <p> <a href="#">Our Story</a> </p>
@@ -59,7 +59,7 @@
           </svg>
           <svg  v-show="customer_services" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13H5v-2h14v2z"/></svg></span>
       </h3>
-      <div class="customer_services_para" :class="{active : customer_services}">
+      <div class="customer_services_para" :class="{ activeFooter : customer_services}">
         <p> <a href="#"> Terms and Condition</a></p>
         <p> <a href="#"> Shipping & Delivery</a></p>
         <p> <a href="#"> Returns & Cancellation</a></p>
@@ -77,7 +77,7 @@
           </svg>
           <svg  v-show="my_profile" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13H5v-2h14v2z"/></svg></span>
       </h3>
-      <div class="my_profile_para" :class="{active : my_profile}">
+      <div class="my_profile_para" :class="{ activeFooter : my_profile}">
         <p> <a href="#"> My Account</a></p>
         <p> <a href="#"> Track Order</a></p>
         <p> <a href="#"> My Cart</a></p>
@@ -380,7 +380,7 @@ export default{
   .para {
     display: none;
   }
-  .active{
+  .activeFooter{
     display: block !important;
   }
   .customer_services_para {

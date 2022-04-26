@@ -37,17 +37,17 @@ export default {
   },
   methods: {
     async productInfoData() {
-      // this.$router.push({
-      //      query: {
-      //       service: "category",
-      //       store: 1,
-      //       url_key: "top-wear-kurtas",
-      //       page: this.pageofpagination,
-      //       count: 20,
-      //       sort_by: this.shrot_by,
-      //       sort_dir: "desc",
-      //       filter: this.filtersoptions,
-      // }})
+      this.$router.push({
+           query: {
+            // service: "category",
+            // store: 1,
+            // url_key: "top-wear-kurtas",
+            // page: this.pageofpagination,
+            // count: 20,
+            // sort_by: this.shrot_by,
+            // sort_dir: "desc",
+            // filter: this.filtersoptions,
+      }})
       this.loading = true;
       console.log("apiCall called");
       let data = await axios.get(
