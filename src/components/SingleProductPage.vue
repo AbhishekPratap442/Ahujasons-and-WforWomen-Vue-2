@@ -11,27 +11,50 @@
       <!-- <span>/</span> -->
     </div>
 
-    <div class="single-product" >
- <div class="single-product-img">
+    <div class="single-product">
+      <div
+        class="single-product-img"
+        v-if="singleProducts && singleProducts.length"
+      >
+        <div class="first-slider">
+          <slick class="slider-for first-img" :options="previewSliderOptions">
+            <div v-for="item in singleProducts" :key="item.index">
+              <img :src="item.image" />
+            </div>
+          </slick>
+        </div>
+        <div class="second-slider">
+          <slick :options="thumbSliderOptions" class="slider-nav first-img">
+            <div v-for="item in singleProducts" :key="item.index">
+              <img :src="item.image" />
+            </div>
+            <!-- <template slot="prevButton"><i class="fas fa-chevron-left"></i></template>
+    <template slot="nextButton"><i class="fas fa-chevron-right"></i></template> -->
+          </slick>
+        </div>
+      </div>
+
+      <!-- ============================Silder with Agile=============================== -->
+
+      <!-- <div class="single-product-img">
    <div class="first-slider">
-  <agile class="main" ref="main" :options="options1" :as-nav-for="asNavFor1">
+  <agile class="main" ref="main" :options="options1" :as-nav-for="asNavFor1" :fade="true">
     <div class="slide" v-for="(item,index) in singleProducts" :key="item.index" :class="`slide--${index}`"><img :src="item.image"/></div>
   </agile>
   </div>
 <div class="second-slider">
-  <agile class="thumbnails" ref="thumbnails" :options="options2" :as-nav-for="asNavFor2"  :slides-to-show="4">
+  <agile class="thumbnails" ref="thumbnails" :options="options2" :as-nav-for="[$refs.main]"  :slides-to-show="4">
     <div class="slide slide--thumbniail" v-for="(item,index) in singleProducts" :key="item.index" :class="`slide--${index}`" @click="$refs.thumbnails.goTo(index)"><img :src="item.image"/></div>
     <template slot="prevButton"><i class="fas fa-chevron-left"></i></template>
     <template slot="nextButton"><i class="fas fa-chevron-right"></i></template>
   </agile>
   </div>
 
- </div>
+ </div> -->
 
+      <!-- ================================================================================ -->
 
-
-
-
+      <!-- ================================Silder with VueSlickCarousel========================= -->
 
       <!-- <div class="single-product-img">
         <div class="first-slider">
@@ -70,6 +93,7 @@
           </VueSlickCarousel>
         </div>
       </div> -->
+      <!-- ======================================================================================= -->
 
       <div class="product-info-box">
         <div class="product-info-name">{{ ProductsInfo.name }}</div>
@@ -415,9 +439,11 @@
 import Main_header from "./Main_header.vue";
 import VueSlickCarousel from "vue-slick-carousel";
 import "vue-slick-carousel/dist/vue-slick-carousel.css";
-import { VueAgile } from 'vue-agile'
+// import { VueAgile } from 'vue-agile'
 // optional style for arrows & dots
 import "vue-slick-carousel/dist/vue-slick-carousel-theme.css";
+import Slick from "vue-slick";
+import "slick-carousel/slick/slick.css";
 // import imageZoom from 'vue-image-zoomer';
 // import 'lazysizes'
 import axios from "axios";
@@ -425,47 +451,55 @@ export default {
   name: "SingleProductPage",
   components: {
     Main_header,
-    agile: VueAgile,
+    // agile: VueAgile,
+    Slick,
     VueSlickCarousel,
     // imageZoom
   },
 
   data() {
     return {
-         c1: undefined,
-    c2: undefined,
-   
-			asNavFor1: [],
-			asNavFor2: [],
-			options1: {
-				dots: false,
-				fade: true,
-				navButtons: false
-			},
-			
-			options2: {
-				autoplay: true,
-				centerMode: true,
-				dots: false,
-				navButtons: false,
-				slidesToShow: 3,
-				responsive: [
-                {
-                    breakpoint: 600,
-                    settings: {
-                        slidesToShow: 5
-                    }
-                },
-                
-                {
-                    breakpoint: 1000,
-                    settings: {
-                        navButtons: true
-                    }
-                }
-            ]
-				
-			},
+      slickOptions: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+        fade: true,
+        asNavFor: ".slider-nav",
+        // Any other options that can be got from plugin documentation
+      },
+      // c1: undefined,
+      // c2: undefined,
+
+      asNavFor1: [],
+      asNavFor2: [],
+      options1: {
+        dots: false,
+        fade: true,
+        navButtons: false,
+      },
+
+      options2: {
+        autoplay: true,
+        centerMode: true,
+        dots: false,
+        navButtons: false,
+        slidesToShow: 3,
+        responsive: [
+          {
+            breakpoint: 600,
+            settings: {
+              slidesToShow: 5,
+            },
+          },
+
+          {
+            breakpoint: 1000,
+            settings: {
+              navButtons: true,
+            },
+          },
+        ],
+      },
       readMore: {},
       selectedColor: "YELLOW",
       selectedSize: 6,
@@ -490,7 +524,7 @@ export default {
       id_product: this.$route.params.id_product,
       ProductName: "",
       SellingPrice: "",
-      slides:[],
+      slides: [],
       singleProducts: [],
       ProductsInfo: [],
       NewSizeInfo: [],
@@ -500,75 +534,105 @@ export default {
       isVisible: false,
       show: false,
 
-      settingMainImg: {
-        // autoplay: true,
-        // autoplaySpeed: 3500,
+      // settingMainImg: {
+      //   // autoplay: true,
+      //   // autoplaySpeed: 3500,
+      // },
+      // settings: {
+      //   // autoplay: true,
+      //   // autoplaySpeed: 3500,
+      //   dots: true,
+      //   infinite: true,
+      //   slidesToShow: 3,
+      //   slidesToScroll: 1,
+      //   vertical: true,
+      //   verticalSwiping: true,
+      // },
+      // settingsslides: {
+      //   // autoplay: true,
+      //   // autoplaySpeed: 2500,
+      //   // arrows: true,
+      //   dots: true,
+      //   focusOnSelect: true,
+      //   infinite: true,
+      //   speed: 2500,
+      //   slidesToShow: 3,
+      //   slidesToScroll: 3,
+      //   touchThreshold: 5,
+      //   responsive: [
+      //     {
+      //       breakpoint: 1024,
+      //       settings: {
+      //         slidesToShow: 3,
+      //         slidesToScroll: 3,
+      //         infinite: true,
+      //         dots: true,
+      //       },
+      //     },
+      //     {
+      //       breakpoint: 760,
+      //       settings: {
+      //         slidesToShow: 2,
+      //         slidesToScroll: 2,
+      //         initialSlide: 2,
+      //         infinite: true,
+      //       },
+      //     },
+      //     {
+      //       breakpoint: 320,
+      //       settings: {
+      //         slidesToShow: 1,
+      //         slidesToScroll: 1,
+      //         infinite: true,
+      //       },
+      //     },
+      //   ],
+      // },
+
+      previewSliderOptions: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+        fade: true,
+        asNavFor: ".slider-nav",
       },
-      settings: {
-        // autoplay: true,
-        // autoplaySpeed: 3500,
-        dots: true,
-        infinite: true,
+
+      thumbSliderOptions: {
         slidesToShow: 3,
         slidesToScroll: 1,
-        vertical: true,
-        verticalSwiping: true,
-      },
-      settingsslides: {
-        // autoplay: true,
-        // autoplaySpeed: 2500,
-        // arrows: true,
+        asNavFor: ".slider-for",
         dots: true,
+        centerMode: true,
         focusOnSelect: true,
-        infinite: true,
-        speed: 2500,
-        slidesToShow: 3,
-        slidesToScroll: 3,
-        touchThreshold: 5,
-        responsive: [
-          {
-            breakpoint: 1024,
-            settings: {
-              slidesToShow: 3,
-              slidesToScroll: 3,
-              infinite: true,
-              dots: true,
-            },
-          },
-          {
-            breakpoint: 760,
-            settings: {
-              slidesToShow: 2,
-              slidesToScroll: 2,
-              initialSlide: 2,
-              infinite: true,
-            },
-          },
-          {
-            breakpoint: 320,
-            settings: {
-              slidesToShow: 1,
-              slidesToScroll: 1,
-              infinite: true,
-            },
-          },
-        ],
+        vertical: true,
+        // verticalSwiping:true
       },
-      randomKey: 123456,
     };
   },
 
   methods: {
+    next() {
+      this.$refs.slick.next();
+    },
+
+    prev() {
+      this.$refs.slick.prev();
+    },
+
+    reInit() {
+      // Helpful if you have to deal with v-for to update dynamic lists
+      this.$nextTick(() => {
+        this.$refs.slick.reSlick();
+      });
+    },
+
     showMore(id) {
       this.$set(this.readMore, id, true);
     },
     showLess(id) {
       this.$set(this.readMore, id, false);
     },
-    // setRandomKey(){
-    //   this.randomKey = Math.random();
-    //   console.log(this.randomKey);
-    // },
+
     changeSize(size) {
       this.selectedSize = size;
     },
@@ -582,13 +646,7 @@ export default {
           },
         })
         .then((data) => {
-          // console.log(data);
-          // console.log("this is a single product data", data.data);
-
-          // console.log("this is product", this.imageURl);
-
           this.ProductName = data.data.result.name;
-          // console.log("this is a product name", this.ProductName);
           this.singleProducts = data.data.result.gallery;
           this.slides = data.data.result.gallery;
           this.ProductsInfo = data.data.result;
@@ -596,8 +654,11 @@ export default {
           this.Attributes = data.data.result.visible_attributes;
           this.BestProducts = data.data.result.bestseller_products;
           this.SellingPrice = data.data.result.selling_price;
+          // console.log(data);
+          // console.log("this is a single product data", data.data);
+          // console.log("this is product", this.imageURl);
+          // console.log("this is a product name", this.ProductName);
           // console.log("this is bestseller product", this.BestProducts);
-
           // console.log("this is a single size data", this.NewSizeInfo);
           // console.log("this is a single product data", this.singleProducts);
           // console.log("this is a single product info", this.ProductsInfo);
@@ -612,8 +673,8 @@ export default {
     this.singleProductInfo();
     // this.c1 = this.$refs.c1;
     // this.c2 = this.$refs.c2;
-    this.asNavFor1.push(this.$refs.thumbnails)
-		this.asNavFor2.push(this.$refs.main)
+    // this.asNavFor1.push(this.$refs.thumbnails);
+    // this.asNavFor2.push(this.$refs.main);
     // this.$nextTick(() => {
     //   this.isMounted = true;
     // });
@@ -627,61 +688,6 @@ export default {
 };
 </script>
 <style>
-/* .slick-slide.slick-active.slick-current {
-    border: 1px solid #c11d14;
-} */
-.main {
-  margin-bottom: 30px;
-}
-
-.thumbnails {
-  margin: 0 -5px;
-  width: calc(100% + 10px);
-}
-
-.agile__nav-button {
-  background: transparent;
-  border: none;
-  color: #ccc;
-  cursor: pointer;
-  font-size: 24px;
-  transition-duration: 0.3s;
-}
-.thumbnails .agile__nav-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-}
-.thumbnails .agile__nav-button--prev {
-  left: -45px;
-}
-.thumbnails .agile__nav-button--next {
-  right: -45px;
-}
-.agile__nav-button:hover {
-  color: #888;
-}
-.agile__dot {
-  margin: 0 10px;
-}
-.agile__dot button {
-  background-color: #eee;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  display: block;
-  height: 10px;
-  font-size: 0;
-  line-height: 0;
-  margin: 0;
-  padding: 0;
-  transition-duration: 0.3s;
-  width: 10px;
-}
-.agile__dot--current button, .agile__dot:hover button {
-  background-color: #888;
-}
-
 .slide {
   align-items: center;
   box-sizing: border-box;
@@ -692,7 +698,7 @@ export default {
 }
 .slide--thumbniail {
   cursor: pointer;
-  /* height: 100px; */
+  height: 100px;
   width: 123px !important;
   display: flex;
   flex-direction: column;
@@ -705,27 +711,11 @@ export default {
 .slide img {
   height: 100%;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   -o-object-position: center;
-     object-position: center;
+  object-position: center;
   width: 100%;
 }
-/* .agile__slides {
-    align-items: center;
-    display: flex;
-    flex-direction: column  !important;;
-    
-    flex-shrink: unset;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    } */
-
-
-
-
-
-
-
 
 .slick-dots {
   display: none !important;
@@ -743,7 +733,6 @@ export default {
   color: #565656;
   margin-right: 5px;
   text-decoration: none;
-
 }
 .slick-prev:before,
 .slick-next:before {
@@ -764,7 +753,7 @@ export default {
   width: 81%;
 }
 .second-slider {
-  width: 10%;
+  width: 15%;
 }
 
 .share-svg {
@@ -789,7 +778,6 @@ export default {
 }
 .slick-vertical .slick-slide {
   width: 61px;
-  border: 1px solid red;
 }
 
 .single-product-img {
@@ -858,13 +846,13 @@ export default {
   margin-bottom: 12px;
   padding: 11px 0px;
 }
-.text{
+.text {
   background: none;
-    border: none;
-    cursor: pointer;
-    color: gray;
-    margin: 3px 0px;
-      font-size: 11px;
+  border: none;
+  cursor: pointer;
+  color: gray;
+  margin: 3px 0px;
+  font-size: 11px;
 }
 .product-info-size-box {
   display: flex;
@@ -949,6 +937,7 @@ export default {
 .product-info-color-img img {
   cursor: pointer;
   width: 100%;
+  border-radius: 50%;
   /* padding: 5px; */
 }
 .active2 {
