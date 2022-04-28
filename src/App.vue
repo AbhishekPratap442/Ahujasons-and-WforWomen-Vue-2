@@ -1,74 +1,30 @@
 <template>
   <div>
     <Navbar_mark />
-    <router-view :productFilter="productFilter"></router-view>
+    <router-view></router-view>
     <Border_mark />
     <Footer />
   </div>
 </template>
 <script>
-// import Main_header from "./components/Main_header.vue";
 import Navbar_mark from "./components/Navbar.vue";
-// import Proheading from "./components/Proheading.vue";
-// import Pages from "./components/Pages.vue";
 import Border_mark from "./components/Border.vue";
 import Footer from "./components/Footer.vue";
-import axios from "axios";
-// import ProductPage from "./components/ProductPage.vue";
-// import ProductPage from "./components/ProductPage.vue";
+
 
 export default {
   name: "App",
   components: {
     Navbar_mark,
+    Border_mark,
+    Footer,
     // Main_header,
     // Proheading,
     // ProductPage,
     // Pages,
-    Border_mark,
-    Footer,
-    // ProductPage
-},
-  data() {
-    return {
-      loading: false,
-      productFilter: [],
-    };
-  },
-  methods: {
-    async productInfoData() {
-      this.$router.push({
-           query: {
-            // service: "category",
-            // store: 1,
-            // url_key: "top-wear-kurtas",
-            // page: this.pageofpagination,
-            // count: 20,
-            // sort_by: this.shrot_by,
-            // sort_dir: "desc",
-            // filter: this.filtersoptions,
-      }})
-      this.loading = true;
-      console.log("apiCall called");
-      let data = await axios.get(
-        ` https://pim.wforwoman.com/pim/pimresponse.php/?service=category&store=1&url_key=top-wear-kurtas&page=1&count=20&sort_by=&sort_dir=desc&filter=`
-      );
-      this.loading = false;
-      console.log("Api1", data.data);
-      // this.productFilter = data.data.result.filters;
-       for( let productFilterInfo of data.data.result.filters)
-      {
-        // console.log('productFilterInfo' , productFilterInfo);
-        this.productFilter.push({...productFilterInfo, isVisible:false});
-      }
-      // console.log("productFilter",this.productFilter);
-      
-    },
+    
   },
 
-  mounted() {
-    this.productInfoData();
-  },
 };
 </script>
 <style>
@@ -204,39 +160,6 @@ body {
     height: 100vh;
     background-color: #05040445;
   }
-
-  /* .nav_links {
-    z-index: 35;
- 
-    display: flex;
-    flex-direction: row;
-    position: absolute;
-    top: 14vh;
-    background-color: #272727d1;
-    transform: translateX(-100vw);
-    transition: all 0.5s ease-in-out;
-    width: 100%;
-     top: -16px;
-    left: 0;
-  }
-  .active {
-    transform: translateX(0vw);
-  }
-  .navlinktransition{
-      transform: translateX(-100vw);
-    transition: all 0.5s ease-in-out;
-  } */
-  /* .filters {
-    display: flex;
-    padding: 0px;
-    width: 100%;
-    z-index: 2;
-    position: fixed;
-    bottom: 0;
-    background-color: white;
-    justify-content: space-evenly;
-} */
-
   .nav_links ul {
     margin: 24px;
   }

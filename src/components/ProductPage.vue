@@ -460,7 +460,7 @@ export default {
     // Main_header,
   },
   props: {
-    productFilter: Array,
+    // productFilter: Array,
   },
   data() {
     return {
@@ -481,6 +481,7 @@ export default {
       checkparam: "",
       pageofpagination: 1,
       productFilterCetegory: [],
+      productFilter:[],
       loading: false,
       spinner: "",
       checkedValues: [],
@@ -534,16 +535,16 @@ export default {
             filter: this.filtersoptions,
           },
         })
-        // .catch((error) => {
-        //   if (
-        //     error.name !== "NavigationDuplicated" &&
-        //     !error.message.includes(
-        //       "Avoided redundant navigation to current location"
-        //     )
-        //   ) {
-        //     console.log(error);
-        //   }
-        // })
+        .catch((error) => {
+          if (
+            error.name !== "NavigationDuplicated" &&
+            !error.message.includes(
+              "Avoided redundant navigation to current location"
+            )
+          ) {
+            console.log(error);
+          }
+        })
         ;
 
       console.log("before");
@@ -570,6 +571,11 @@ export default {
       this.productsSort = data.data.result.sort;
       this.productCount = data.data.result.count;
       this.productName = data.data.result.name;
+       for( let productFilterInfo of data.data.result.filters)
+      {
+        // console.log('productFilterInfo' , productFilterInfo);
+        this.productFilter.push({...productFilterInfo, isVisible:false});
+      }
       console.log("list product", this.list);
     },
 
@@ -631,8 +637,7 @@ export default {
 
     pagination(paginationNumbers) {
       this.pageofpagination = paginationNumbers;
-      console.log(this.pageofpagination);
-
+      // console.log(this.pageofpagination);
       this.productInfoData();
     },
     // viewproduct(id_product) {
@@ -776,6 +781,10 @@ svg {
   color: #e4e4e4;
   margin-left: 12px ;
 }
+.filter_display {
+  display: block;
+  transform: translateX(0vw);
+}
 @media only screen and (max-width: 1024px) and (min-width: 768px) {
   .left1 ul li {
     list-style: none;
@@ -838,27 +847,7 @@ svg {
     height: 100vh;
     background-color: #05040445;
   }
-  /* .nav_links {
-    z-index: 35;
- 
-    display: flex;
-    flex-direction: row;
-    position: absolute;
-    top: 14vh;
-    background-color: #272727d1;
-    transform: translateX(-100vw);
-    transition: all 0.5s ease-in-out;
-    width: 100%;
-     top: -16px;
-    left: 0;
-  }
-  .active {
-    transform: translateX(0vw);
-  }
-  .navlinktransition{
-      transform: translateX(-100vw);
-    transition: all 0.5s ease-in-out;
-  } */
+
 
   .nav_links ul {
     margin: 4px 15px;

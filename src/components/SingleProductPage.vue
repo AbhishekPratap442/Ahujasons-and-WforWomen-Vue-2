@@ -11,8 +11,29 @@
       <!-- <span>/</span> -->
     </div>
 
-    <div class="single-product">
-      <div class="single-product-img" v-if="singleProducts.length">
+    <div class="single-product" >
+ <div class="single-product-img">
+   <div class="first-slider">
+  <agile class="main" ref="main" :options="options1" :as-nav-for="asNavFor1">
+    <div class="slide" v-for="(item,index) in singleProducts" :key="item.index" :class="`slide--${index}`"><img :src="item.image"/></div>
+  </agile>
+  </div>
+<div class="second-slider">
+  <agile class="thumbnails" ref="thumbnails" :options="options2" :as-nav-for="asNavFor2"  :slides-to-show="4">
+    <div class="slide slide--thumbniail" v-for="(item,index) in singleProducts" :key="item.index" :class="`slide--${index}`" @click="$refs.thumbnails.goTo(index)"><img :src="item.image"/></div>
+    <template slot="prevButton"><i class="fas fa-chevron-left"></i></template>
+    <template slot="nextButton"><i class="fas fa-chevron-right"></i></template>
+  </agile>
+  </div>
+
+ </div>
+
+
+
+
+
+
+      <!-- <div class="single-product-img">
         <div class="first-slider">
           <VueSlickCarousel
             v-bind="settingMainImg"
@@ -20,29 +41,35 @@
             ref="c1"
             :asNavFor="$refs.c2"
             :focusOnSelect="true"
-          >
-            <div v-for="item in singleProducts" :key="item.id_product">
-                <img :src="item.image" alt="" />
-               
-            </div>
-          </VueSlickCarousel>
-        </div>
-        <div class="second-slider">
-          <VueSlickCarousel
-            v-bind="settings"
-            :style="{ height: '372px' }"
-            class="first-img"
-            ref="c2"
-            :asNavFor="$refs.c1"
-            :slidesToShow="4"
-            :focusOnSelect="true"
+            :key="randomKey"
           >
             <div v-for="item in singleProducts" :key="item.id_product">
               <img :src="item.image" alt="" />
             </div>
           </VueSlickCarousel>
         </div>
-      </div>
+        <div class="second-slider">
+          <VueSlickCarousel
+            class="first-img"
+            v-bind="settings"
+            ref="c2"
+            :style="{ height: '372px' }"
+            :asNavFor="$refs.c1"
+            :slidesToShow="4"
+            :focusOnSelect="true"
+            :key="randomKey"
+         
+          >
+            <div
+              v-for="item in singleProducts"
+              :key="item.id_product"
+              class="mini-slider-img"
+            >
+              <img :src="item.image" alt="" />
+            </div>
+          </VueSlickCarousel>
+        </div>
+      </div> -->
 
       <div class="product-info-box">
         <div class="product-info-name">{{ ProductsInfo.name }}</div>
@@ -148,7 +175,24 @@
           </span>
         </div>
         <div class="product-info-description">
-          {{ ProductsInfo.description }}
+          <p v-if="!readMore[ProductsInfo.id]">
+            {{ ProductsInfo.description.substring(0, 50) + "...." }}
+          </p>
+          <p v-if="readMore[ProductsInfo.id]">{{ ProductsInfo.description }}</p>
+          <button
+            @click="showMore(ProductsInfo.id)"
+            v-if="!readMore[ProductsInfo.id]"
+            class="text"
+          >
+            Show more
+          </button>
+          <button
+            @click="showLess(ProductsInfo.id)"
+            v-if="readMore[ProductsInfo.id]"
+            class="text"
+          >
+            Show less
+          </button>
         </div>
         <div class="size-box">
           <span class="size"
@@ -371,6 +415,7 @@
 import Main_header from "./Main_header.vue";
 import VueSlickCarousel from "vue-slick-carousel";
 import "vue-slick-carousel/dist/vue-slick-carousel.css";
+import { VueAgile } from 'vue-agile'
 // optional style for arrows & dots
 import "vue-slick-carousel/dist/vue-slick-carousel-theme.css";
 // import imageZoom from 'vue-image-zoomer';
@@ -380,14 +425,51 @@ export default {
   name: "SingleProductPage",
   components: {
     Main_header,
+    agile: VueAgile,
     VueSlickCarousel,
     // imageZoom
   },
 
   data() {
     return {
+         c1: undefined,
+    c2: undefined,
+   
+			asNavFor1: [],
+			asNavFor2: [],
+			options1: {
+				dots: false,
+				fade: true,
+				navButtons: false
+			},
+			
+			options2: {
+				autoplay: true,
+				centerMode: true,
+				dots: false,
+				navButtons: false,
+				slidesToShow: 3,
+				responsive: [
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 5
+                    }
+                },
+                
+                {
+                    breakpoint: 1000,
+                    settings: {
+                        navButtons: true
+                    }
+                }
+            ]
+				
+			},
+      readMore: {},
       selectedColor: "YELLOW",
       selectedSize: 6,
+      isMounted: false,
       colorVarient: [
         {
           image_url:
@@ -405,9 +487,10 @@ export default {
           color_name: "BLACK",
         },
       ],
-      id_product: "",
+      id_product: this.$route.params.id_product,
       ProductName: "",
       SellingPrice: "",
+      slides:[],
       singleProducts: [],
       ProductsInfo: [],
       NewSizeInfo: [],
@@ -458,7 +541,7 @@ export default {
               slidesToShow: 2,
               slidesToScroll: 2,
               initialSlide: 2,
-              infinite: true
+              infinite: true,
             },
           },
           {
@@ -466,15 +549,26 @@ export default {
             settings: {
               slidesToShow: 1,
               slidesToScroll: 1,
-              infinite: true
+              infinite: true,
             },
           },
         ],
       },
+      randomKey: 123456,
     };
   },
 
   methods: {
+    showMore(id) {
+      this.$set(this.readMore, id, true);
+    },
+    showLess(id) {
+      this.$set(this.readMore, id, false);
+    },
+    // setRandomKey(){
+    //   this.randomKey = Math.random();
+    //   console.log(this.randomKey);
+    // },
     changeSize(size) {
       this.selectedSize = size;
     },
@@ -496,6 +590,7 @@ export default {
           this.ProductName = data.data.result.name;
           // console.log("this is a product name", this.ProductName);
           this.singleProducts = data.data.result.gallery;
+          this.slides = data.data.result.gallery;
           this.ProductsInfo = data.data.result;
           this.NewSizeInfo = data.data.result.new_size_chart.result;
           this.Attributes = data.data.result.visible_attributes;
@@ -514,22 +609,129 @@ export default {
   },
 
   mounted() {
-    this.id_product = this.$route.params.id_product;
     this.singleProductInfo();
+    // this.c1 = this.$refs.c1;
+    // this.c2 = this.$refs.c2;
+    this.asNavFor1.push(this.$refs.thumbnails)
+		this.asNavFor2.push(this.$refs.main)
+    // this.$nextTick(() => {
+    //   this.isMounted = true;
+    // });
+    //     if(this.singleProducts && this.singleProducts.length){
+    // this.$nextTick(()=>{
+    //   this.$refs.slick.c2(this.settings);
+    // })
+    //     }
     // console.log("router", this.$router);
   },
 };
 </script>
-<style >
-.slick-slide.slick-active.slick-current {
+<style>
+/* .slick-slide.slick-active.slick-current {
     border: 1px solid #c11d14;
+} */
+.main {
+  margin-bottom: 30px;
 }
 
-.slick-dots{
- display: none  !important;
-} 
+.thumbnails {
+  margin: 0 -5px;
+  width: calc(100% + 10px);
+}
+
+.agile__nav-button {
+  background: transparent;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 24px;
+  transition-duration: 0.3s;
+}
+.thumbnails .agile__nav-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.thumbnails .agile__nav-button--prev {
+  left: -45px;
+}
+.thumbnails .agile__nav-button--next {
+  right: -45px;
+}
+.agile__nav-button:hover {
+  color: #888;
+}
+.agile__dot {
+  margin: 0 10px;
+}
+.agile__dot button {
+  background-color: #eee;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: block;
+  height: 10px;
+  font-size: 0;
+  line-height: 0;
+  margin: 0;
+  padding: 0;
+  transition-duration: 0.3s;
+  width: 10px;
+}
+.agile__dot--current button, .agile__dot:hover button {
+  background-color: #888;
+}
+
+.slide {
+  align-items: center;
+  box-sizing: border-box;
+  color: #fff;
+  display: flex;
+  /* height: 450px; */
+  justify-content: center;
+}
+.slide--thumbniail {
+  cursor: pointer;
+  /* height: 100px; */
+  width: 123px !important;
+  display: flex;
+  flex-direction: column;
+  padding: 0 5px;
+  transition: opacity 0.3s;
+}
+.slide--thumbniail:hover {
+  opacity: 0.75;
+}
+.slide img {
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: center;
+     object-position: center;
+  width: 100%;
+}
+/* .agile__slides {
+    align-items: center;
+    display: flex;
+    flex-direction: column  !important;;
+    
+    flex-shrink: unset;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    } */
+
+
+
+
+
+
+
+
+.slick-dots {
+  display: none !important;
+}
 .slick-dots li button {
-  display: none  !important;
+  display: none !important;
 }
 .upper-product-nav {
   padding: 14px 51px;
@@ -541,6 +743,7 @@ export default {
   color: #565656;
   margin-right: 5px;
   text-decoration: none;
+
 }
 .slick-prev:before,
 .slick-next:before {
@@ -582,20 +785,23 @@ export default {
 
 .first-img img {
   width: 100%;
-      /* margin-top: 4px !important; */
+  margin-top: 4px !important;
 }
-.slick-vertical .slick-slide{
+.slick-vertical .slick-slide {
   width: 61px;
+  border: 1px solid red;
 }
 
 .single-product-img {
   display: flex;
   position: relative;
-  width: 60%;
+  justify-content: space-between;
+  width: 55%;
 }
 .product-info-box {
   width: 42%;
 }
+/* .single-product-img .second-slider .slick-slide img{ border:1px solid red} */
 .product-info-name {
   margin-bottom: 10px;
   font-weight: 400;
@@ -651,6 +857,14 @@ export default {
   border-bottom: 1px solid #7e7e7e;
   margin-bottom: 12px;
   padding: 11px 0px;
+}
+.text{
+  background: none;
+    border: none;
+    cursor: pointer;
+    color: gray;
+    margin: 3px 0px;
+      font-size: 11px;
 }
 .product-info-size-box {
   display: flex;
@@ -737,7 +951,7 @@ export default {
   width: 100%;
   /* padding: 5px; */
 }
-.active2{
+.active2 {
   border: 1px solid black;
   border-radius: 50%;
   padding: 2px;
@@ -787,9 +1001,9 @@ export default {
   color: #808080;
   letter-spacing: 1px;
 }
-.first-img {
+/* .first-img {
   width: 90%;
-}
+} */
 .product-attributes-box {
   margin-top: 23px;
 }
@@ -963,6 +1177,7 @@ export default {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
+    padding-right: 20px;
   }
   .first-img {
     width: 100%;
@@ -1096,5 +1311,10 @@ export default {
   .shipping {
     display: none;
   }
+}
+
+/* ========================== */
+.second-slider .slick-slide.slick-active.slick-current {
+  border: 1px solid red;
 }
 </style>
