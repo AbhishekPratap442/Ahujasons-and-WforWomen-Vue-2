@@ -354,6 +354,7 @@ export default{
 
   .sign_up{
     margin: 17px;
+    padding-bottom: 61px;
   }
   .sign_up h3{
        margin: 0;

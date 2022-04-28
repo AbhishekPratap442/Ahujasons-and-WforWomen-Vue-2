@@ -19,7 +19,14 @@
         <div class="first-slider">
           <slick class="slider-for first-img" :options="previewSliderOptions">
             <div v-for="item in singleProducts" :key="item.index">
-              <img :src="item.image" />
+              <image-zoom
+                :regular="item.image"
+                :zoom="item.image"
+                :lazyload="true"
+                :lazyload-placeholder="item.image"
+              >
+                <!-- <img :src="item.image" /> -->
+              </image-zoom>
             </div>
           </slick>
         </div>
@@ -28,8 +35,6 @@
             <div v-for="item in singleProducts" :key="item.index">
               <img :src="item.image" />
             </div>
-            <!-- <template slot="prevButton"><i class="fas fa-chevron-left"></i></template>
-    <template slot="nextButton"><i class="fas fa-chevron-right"></i></template> -->
           </slick>
         </div>
       </div>
@@ -444,17 +449,17 @@ import "vue-slick-carousel/dist/vue-slick-carousel.css";
 import "vue-slick-carousel/dist/vue-slick-carousel-theme.css";
 import Slick from "vue-slick";
 import "slick-carousel/slick/slick.css";
-// import imageZoom from 'vue-image-zoomer';
-// import 'lazysizes'
+import imageZoom from "vue-image-zoomer";
+import "lazysizes";
 import axios from "axios";
 export default {
   name: "SingleProductPage",
   components: {
     Main_header,
+    imageZoom,
     // agile: VueAgile,
     Slick,
     VueSlickCarousel,
-    // imageZoom
   },
 
   data() {
@@ -534,61 +539,61 @@ export default {
       isVisible: false,
       show: false,
 
-      // settingMainImg: {
-      //   // autoplay: true,
-      //   // autoplaySpeed: 3500,
-      // },
-      // settings: {
-      //   // autoplay: true,
-      //   // autoplaySpeed: 3500,
-      //   dots: true,
-      //   infinite: true,
-      //   slidesToShow: 3,
-      //   slidesToScroll: 1,
-      //   vertical: true,
-      //   verticalSwiping: true,
-      // },
-      // settingsslides: {
-      //   // autoplay: true,
-      //   // autoplaySpeed: 2500,
-      //   // arrows: true,
-      //   dots: true,
-      //   focusOnSelect: true,
-      //   infinite: true,
-      //   speed: 2500,
-      //   slidesToShow: 3,
-      //   slidesToScroll: 3,
-      //   touchThreshold: 5,
-      //   responsive: [
-      //     {
-      //       breakpoint: 1024,
-      //       settings: {
-      //         slidesToShow: 3,
-      //         slidesToScroll: 3,
-      //         infinite: true,
-      //         dots: true,
-      //       },
-      //     },
-      //     {
-      //       breakpoint: 760,
-      //       settings: {
-      //         slidesToShow: 2,
-      //         slidesToScroll: 2,
-      //         initialSlide: 2,
-      //         infinite: true,
-      //       },
-      //     },
-      //     {
-      //       breakpoint: 320,
-      //       settings: {
-      //         slidesToShow: 1,
-      //         slidesToScroll: 1,
-      //         infinite: true,
-      //       },
-      //     },
-      //   ],
-      // },
-
+      settingMainImg: {
+        // autoplay: true,
+        // autoplaySpeed: 3500,
+      },
+      settings: {
+        // autoplay: true,
+        // autoplaySpeed: 3500,
+        dots: true,
+        infinite: true,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        vertical: true,
+        verticalSwiping: true,
+      },
+      settingsslides: {
+        // autoplay: true,
+        // autoplaySpeed: 2500,
+        // arrows: true,
+        dots: true,
+        focusOnSelect: true,
+        infinite: true,
+        // speed: 2500,
+        slidesToShow: 3,
+        slidesToScroll: 3,
+        touchThreshold: 5,
+        responsive: [
+          {
+            breakpoint: 1024,
+            settings: {
+              slidesToShow: 3,
+              slidesToScroll: 3,
+              infinite: true,
+              dots: true,
+            },
+          },
+          {
+            breakpoint: 760,
+            settings: {
+              slidesToShow: 2,
+              slidesToScroll: 2,
+              initialSlide: 2,
+              infinite: true,
+            },
+          },
+          {
+            breakpoint: 320,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1,
+              infinite: true,
+            },
+          },
+        ],
+      },
+      randomKey: 123456,
       previewSliderOptions: {
         slidesToShow: 1,
         slidesToScroll: 1,
@@ -598,11 +603,10 @@ export default {
       },
 
       thumbSliderOptions: {
-        slidesToShow: 3,
+        slidesToShow: 4,
         slidesToScroll: 1,
         asNavFor: ".slider-for",
         dots: true,
-        centerMode: true,
         focusOnSelect: true,
         vertical: true,
         // verticalSwiping:true
@@ -673,8 +677,8 @@ export default {
     this.singleProductInfo();
     // this.c1 = this.$refs.c1;
     // this.c2 = this.$refs.c2;
-    // this.asNavFor1.push(this.$refs.thumbnails);
-    // this.asNavFor2.push(this.$refs.main);
+    this.asNavFor1.push(this.$refs.thumbnails);
+    this.asNavFor2.push(this.$refs.main);
     // this.$nextTick(() => {
     //   this.isMounted = true;
     // });
@@ -688,6 +692,13 @@ export default {
 };
 </script>
 <style>
+/* .slick-slide.slick-active.slick-current {
+    border: 1px solid #c11d14;
+} */
+/* .main {
+  margin-bottom: 30px;
+/* } */
+
 .slide {
   align-items: center;
   box-sizing: border-box;
@@ -774,12 +785,13 @@ export default {
 
 .first-img img {
   width: 100%;
-  margin-top: 4px !important;
 }
 .slick-vertical .slick-slide {
   width: 61px;
 }
-
+.slick-vertical .slick-slide div {
+  display: block !important;
+}
 .single-product-img {
   display: flex;
   position: relative;
@@ -1100,6 +1112,9 @@ export default {
 .location input:focus {
   outline: none;
 }
+.location label {
+  width: 23px;
+}
 .best-product-box {
   cursor: pointer;
   width: 97%;
@@ -1300,6 +1315,10 @@ export default {
   .shipping {
     display: none;
   }
+
+  .best-product {
+    padding: 0px 10px;
+}
 }
 
 /* ========================== */
