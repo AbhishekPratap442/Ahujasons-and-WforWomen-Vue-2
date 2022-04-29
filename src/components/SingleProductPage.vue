@@ -205,7 +205,7 @@
         </div>
         <div class="product-info-description">
           <p v-if="!readMore[ProductsInfo.id]">
-            {{ ProductsInfo.description.substring(0, 50) + "...." }}
+            {{ ProductsInfo.description.substr(0, 50) + "...." }}
           </p>
           <p v-if="readMore[ProductsInfo.id]">{{ ProductsInfo.description }}</p>
           <button
@@ -363,11 +363,13 @@
             <input
               id="pin"
               name="pin"
-              type="tel"
+              type="number"
               pattern="[0-9]*"
-              maxlength="6"
               placeholder="Enter pincode"
+              @keypress="enteredPin"
+              v-model="pin_code"
             />
+              <!-- maxlength="6" -->
           </label>
 
           <span>CHECK</span>
@@ -584,7 +586,7 @@ export default {
             },
           },
           {
-            breakpoint: 320,
+            breakpoint: 319,
             settings: {
               slidesToShow: 1,
               slidesToScroll: 1,
@@ -593,6 +595,7 @@ export default {
           },
         ],
       },
+      pin_code:'',
       randomKey: 123456,
       previewSliderOptions: {
         slidesToShow: 1,
@@ -640,6 +643,18 @@ export default {
     changeSize(size) {
       this.selectedSize = size;
     },
+
+enteredPin(){
+ if(this.pin_code.length >= 4) {
+                this.pin_code = this.pin_code.substr(0, 5);
+            }
+            return  this.pin_code
+},
+
+
+
+
+
     singleProductInfo() {
       axios
         .get(`https://pim.wforwoman.com/pim/pimresponse.php/`, {
@@ -671,6 +686,11 @@ export default {
     changeColor(color) {
       this.selectedColor = color;
     },
+
+
+
+
+
   },
 
   mounted() {
@@ -1171,6 +1191,11 @@ export default {
 .slick-dots li {
   display: none !important;
 }
+.location input::-webkit-outer-spin-button,
+.location input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
 @media (max-width: 767px) {
   .upper-product-nav {
@@ -1319,10 +1344,14 @@ export default {
   .best-product {
     padding: 0px 10px;
 }
+.product-info-Product_Title_FH{
+  padding:6px 11px;;
+}
 }
 
 /* ========================== */
 .second-slider .slick-slide.slick-active.slick-current {
   border: 1px solid red;
+  margin: 4px 0px;
 }
 </style>

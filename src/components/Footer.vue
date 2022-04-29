@@ -368,6 +368,7 @@ export default{
 }
 .email input{
   width: 73%;
+      padding-right: 0px;
   border: none;
  
 }
