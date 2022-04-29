@@ -401,7 +401,11 @@
               <div class="productsSpecs">
                 <h4>{{ item.name }}</h4>
                 <span>Rs{{ item.selling_price }}</span>
-                <span class="price" :class="item.discount == 0 ? 'discount' : ''"><s>Rs{{ item.price }}</s></span>
+                <span
+                  class="price"
+                  :class="item.discount == 0 ? 'discount' : ''"
+                  ><s>Rs{{ item.price }}</s></span
+                >
                 <span
                   id="discount"
                   :class="item.discount == 0 ? 'discount' : ''"
@@ -481,7 +485,7 @@ export default {
       checkparam: "",
       pageofpagination: 1,
       productFilterCetegory: [],
-      productFilter:[],
+      productFilter: [],
       loading: false,
       spinner: "",
       checkedValues: [],
@@ -544,8 +548,7 @@ export default {
           ) {
             console.log(error);
           }
-        })
-        ;
+        });
 
       console.log("before");
       this.loading = true;
@@ -571,10 +574,9 @@ export default {
       this.productsSort = data.data.result.sort;
       this.productCount = data.data.result.count;
       this.productName = data.data.result.name;
-       for( let productFilterInfo of data.data.result.filters)
-      {
+      for (let productFilterInfo of data.data.result.filters) {
         // console.log('productFilterInfo' , productFilterInfo);
-        this.productFilter.push({...productFilterInfo, isVisible:false});
+        this.productFilter.push({ ...productFilterInfo, isVisible: false });
       }
       console.log("list product", this.list);
     },
@@ -776,10 +778,10 @@ svg {
 .view-product:hover {
   transform: translateY(0vh);
 }
-.price{
+.price {
   font-size: 12px;
   color: #e4e4e4;
-  margin-left: 12px ;
+  margin-left: 12px;
 }
 .filter_display {
   display: block;
@@ -847,7 +849,6 @@ svg {
     height: 100vh;
     background-color: #05040445;
   }
-
 
   .nav_links ul {
     margin: 4px 15px;

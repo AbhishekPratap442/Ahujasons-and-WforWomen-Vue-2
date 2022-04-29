@@ -364,12 +364,12 @@
               id="pin"
               name="pin"
               type="number"
-              pattern="[0-9]*"
+              @input="enteredPin()"
               placeholder="Enter pincode"
-              @keypress="enteredPin"
               v-model="pin_code"
             />
-              <!-- maxlength="6" -->
+            <!-- max="999999" -->
+            <!-- maxlength="6" -->
           </label>
 
           <span>CHECK</span>
@@ -414,7 +414,7 @@
     <div class="best-product" v-if="BestProducts.length">
       <VueSlickCarousel v-bind="settingsslides">
         <div
-          class="best-product-img"
+          class="best-product-img first-img"
           v-for="BestProduct in BestProducts"
           :key="BestProduct.id_product"
         >
@@ -454,14 +454,15 @@ import "slick-carousel/slick/slick.css";
 import imageZoom from "vue-image-zoomer";
 import "lazysizes";
 import axios from "axios";
+
 export default {
   name: "SingleProductPage",
   components: {
     Main_header,
     imageZoom,
-    // agile: VueAgile,
     Slick,
     VueSlickCarousel,
+    // agile: VueAgile,
   },
 
   data() {
@@ -472,7 +473,6 @@ export default {
         arrows: false,
         fade: true,
         asNavFor: ".slider-nav",
-        // Any other options that can be got from plugin documentation
       },
       // c1: undefined,
       // c2: undefined,
@@ -595,7 +595,7 @@ export default {
           },
         ],
       },
-      pin_code:'',
+      pin_code: "",
       randomKey: 123456,
       previewSliderOptions: {
         slidesToShow: 1,
@@ -612,7 +612,6 @@ export default {
         dots: true,
         focusOnSelect: true,
         vertical: true,
-        // verticalSwiping:true
       },
     };
   },
@@ -644,16 +643,11 @@ export default {
       this.selectedSize = size;
     },
 
-enteredPin(){
- if(this.pin_code.length >= 4) {
-                this.pin_code = this.pin_code.substr(0, 5);
-            }
-            return  this.pin_code
-},
-
-
-
-
+    enteredPin() {
+      if (this.pin_code.length > 6) {
+        this.pin_code = this.pin_code.substr(0, 6);
+      } else this.pin_code = this.pin_code.replace(/\D/, "");
+    },
 
     singleProductInfo() {
       axios
@@ -686,11 +680,6 @@ enteredPin(){
     changeColor(color) {
       this.selectedColor = color;
     },
-
-
-
-
-
   },
 
   mounted() {
@@ -712,13 +701,6 @@ enteredPin(){
 };
 </script>
 <style>
-/* .slick-slide.slick-active.slick-current {
-    border: 1px solid #c11d14;
-} */
-/* .main {
-  margin-bottom: 30px;
-/* } */
-
 .slide {
   align-items: center;
   box-sizing: border-box;
@@ -808,6 +790,7 @@ enteredPin(){
 }
 .slick-vertical .slick-slide {
   width: 61px;
+  margin: 3px 0px;
 }
 .slick-vertical .slick-slide div {
   display: block !important;
@@ -1343,15 +1326,15 @@ enteredPin(){
 
   .best-product {
     padding: 0px 10px;
-}
-.product-info-Product_Title_FH{
-  padding:6px 11px;;
-}
+  }
+  .product-info-Product_Title_FH {
+    padding: 6px 11px;
+  }
 }
 
 /* ========================== */
 .second-slider .slick-slide.slick-active.slick-current {
   border: 1px solid red;
-  margin: 4px 0px;
+  /* margin: 4px 0px; */
 }
 </style>
