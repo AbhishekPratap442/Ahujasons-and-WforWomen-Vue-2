@@ -283,7 +283,7 @@
                 />
               </g>
             </svg>
-            <span @click="toggleDetails">{{
+            <span @click="toggleDetails" >{{
               detailsAreVisible ? "HIDE FILTER" : "SHOW FILTER"
             }}</span>
           </h3>
@@ -385,7 +385,7 @@
           </div>
         </div>
 
-        <div class="api_products" :disabled="loading">
+        <div class="api_products" :class="filterSeen ? 'api_products_second ' : ''" :disabled="loading">
           <div
             v-for="item in list"
             :key="item.id_product"
@@ -421,15 +421,15 @@
       <!-- ---------------------------page------------------------ -->
 
       <div class="pagesnation">
-        <div class="page" v-if="this.productCount / 20 > 1">
+        <div class="page" v-if="productCount / 20 > 1">
           <p>
-            Page {{ this.pageofpagination }} of
-            {{ Math.ceil(this.productCount / 20) }}
+            Page {{ pageofpagination }} of
+            {{ Math.ceil(productCount / 20) }}
           </p>
         </div>
 
         <div class="Pagenation_count">
-          <ul class="no_pages" v-if="this.productCount / 20 > 1">
+          <ul class="no_pages" v-if="productCount / 20 > 1">
             <li
               v-for="page in paginationLoopMethod()"
               :key="page"
@@ -438,13 +438,13 @@
               {{ page }}
             </li>
 
-            <li v-if="this.productCount / 20 > 1">.....</li>
+            <li v-if="productCount / 20 > 1">.....</li>
 
             <li
-              v-if="this.productCount / 20 > 1"
-              @click="pagination(Math.ceil(this.productCount / 20))"
+              v-if="productCount / 20 > 1"
+              @click="pagination(Math.ceil(productCount / 20))"
             >
-              {{ Math.ceil(this.productCount / 20) }}
+              {{ Math.ceil(productCount / 20) }}
               <!-- v-bind="page" -->
             </li>
           </ul>
@@ -479,9 +479,9 @@ export default {
       showfilter: false,
       isVisible: false,
       closeFilter: false,
-      shrot_by: "",
+      shrot_by: this.$route.query.sort_by || "",
       value: "",
-      filtersoptions: "",
+      filtersoptions: this.$route.query.filter || "",
       checkparam: "",
       pageofpagination: 1,
       productFilterCetegory: [],
@@ -497,7 +497,7 @@ export default {
         // console.log('this. pages 1' ,  this.pageofpagination)
         return this.getNumbers(
           this.pageofpagination,
-          this.pageofpagination + 5
+          this.pageofpagination + 6
         );
       } else if (this.pageofpagination >= Math.ceil(this.productCount / 20)) {
         // console.log('this. pages else if' ,  this.pageofpagination)
@@ -574,9 +574,11 @@ export default {
       this.productsSort = data.data.result.sort;
       this.productCount = data.data.result.count;
       this.productName = data.data.result.name;
-      for (let productFilterInfo of data.data.result.filters) {
-        // console.log('productFilterInfo' , productFilterInfo);
-        this.productFilter.push({ ...productFilterInfo, isVisible: false });
+      if (this.productFilter.length == 0) {
+        for (let productFilterInfo of data.data.result.filters) {
+          // console.log('productFilterInfo' , productFilterInfo);
+          this.productFilter.push({ ...productFilterInfo, isVisible: false });
+        }
       }
       console.log("list product", this.list);
     },
@@ -599,6 +601,7 @@ export default {
         let checkedValuesIndex = this.checkedValues.indexOf(`${value}`);
         this.productFilterCetegory.splice(checkingIndex, 1);
         this.checkedValues.splice(checkedValuesIndex, 1);
+        this.filtersoptions = this.productFilterCetegory.toString();
         this.filtersoptions = this.productFilterCetegory.toString();
       }
 
@@ -650,6 +653,35 @@ export default {
 
   mounted() {
     this.productInfoData();
+
+    if (this.filtersoptions) {
+      let arr = this.filtersoptions?.split(/-|,/);
+      arr.forEach((element, index) => {
+        if (index % 2 == 0) {
+          this.sortingdatabyfilter(0,arr[index + 1], element);
+          // this.productFilterCetegory.splice();
+          // this.checkedValues.splice();
+        }
+        console.log("this is arr" , arr ,this.sortingdatabyfilter);
+      });
+
+      this.productInfoData();
+    }
+    if (this.shrot_by) {
+      let arr1 = this.shrot_by?.split(',');
+      arr1.forEach((element, index) => {
+        if (index) {
+          this.sortingdatabyprice(0,arr1[index], element);
+          // this.productFilterCetegory.splice();
+          // this.checkedValues.splice();
+        }
+        console.log("this is arr" , arr1 ,this.sortingdatabyprice);
+      });
+
+      this.productInfoData();
+    }
+
+    
   },
 };
 </script>
@@ -1010,8 +1042,8 @@ body {
 .checkmark.checkmarkbg {
   background: #4c0b36
     url(https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/White_check.svg/1200px-White_check.svg.png)
-    center/1250% no-repeat;
-  background-size: contain;
+    center/80% no-repeat;
+  /* background-size: contain; */
 }
 .checkbox input:checked + .checkmark {
   background-size: 60%;
@@ -1036,7 +1068,7 @@ body {
 .applied_filter {
   display: flex;
   position: absolute;
-  left: 17vw;
+  left: 20%;
   max-width: 57%;
   flex-wrap: wrap;
 }
@@ -1115,7 +1147,9 @@ svg {
   flex-wrap: wrap;
   justify-content: space-between;
 }
-
+.api_products_second{
+ width: 80%;
+}
 .api_products_img {
   width: 22%;
 }

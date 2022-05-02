@@ -88,6 +88,7 @@ li {
 
 .right ul li a {
   text-decoration: none;
+  color: black;
 }
 .right ul li span {
   padding: 0px 5px;

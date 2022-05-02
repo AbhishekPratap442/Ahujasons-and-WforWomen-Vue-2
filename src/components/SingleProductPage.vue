@@ -187,7 +187,8 @@
               d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4V6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
             />
           </svg>
-          <span class="review">(10) ></span>
+          <span class="review">(10)</span>
+          <img src="../assets/chevron_right_FILL0_wght400_GRAD0_opsz48.png" >
         </div>
         <span class="product-info-selling_price"
           >Rs: {{ ProductsInfo.selling_price }}</span
@@ -688,6 +689,7 @@ export default {
     // this.c2 = this.$refs.c2;
     this.asNavFor1.push(this.$refs.thumbnails);
     this.asNavFor2.push(this.$refs.main);
+  
     // this.$nextTick(() => {
     //   this.isMounted = true;
     // });
@@ -787,6 +789,7 @@ export default {
 
 .first-img img {
   width: 100%;
+  cursor: pointer;
 }
 .slick-vertical .slick-slide {
   width: 61px;
@@ -819,6 +822,10 @@ export default {
 }
 .rating svg {
   margin: 0px 0px;
+}
+.rating img{
+  width: 18px;
+  cursor: pointer;
 }
 .review {
   font-size: 12px;
@@ -903,6 +910,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin: 23px 0px;
+  cursor: pointer;
 }
 /* .product-info ul{
     height: 40px;

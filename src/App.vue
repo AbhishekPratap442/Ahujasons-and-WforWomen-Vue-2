@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navbar_mark />
-    <router-view></router-view>
+    <router-view ></router-view>
     <Border_mark />
     <Footer />
   </div>
