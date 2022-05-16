@@ -534,7 +534,7 @@ export default {
             // url_key: "top-wear-kurtas",
             page: this.pageofpagination,
             count: 20,
-            sort_by: this.shrot_by,
+            sort_by: this.shrot_by, 
             // sort_dir: "desc",
             filter: this.filtersoptions,
           },

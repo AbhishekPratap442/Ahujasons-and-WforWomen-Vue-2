@@ -3,6 +3,7 @@ import App from "./App.vue";
 import VueRouter from "vue-router";
 import SingleProductPage from "./components/SingleProductPage.vue";
 import ProductPage from "./components/ProductPage.vue";
+import errorPage from "./components/ErrorPage.vue"
 
 Vue.use(VueRouter);
 const routes = [
@@ -14,6 +15,10 @@ const routes = [
   {
     path: "/product/:id_product",
     component: SingleProductPage,
+  },
+  {
+    path: "/:pageNotFound(.*)",
+    component: errorPage,
   },
 ];
 
